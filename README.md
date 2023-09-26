@@ -2,11 +2,10 @@
 
 ## Prerequisites
 Before using this snippet, verify you've met with the following requirements:
-- [ ] The powershell EXO v3 module must be installed on the server running the Agent. See
-https://learn.microsoft.com/en-us/powershell/exchange/exchange-online-powershell-v2?view=exchange-ps for instructions
+- [ ] The powershell EXO v3 module must be installed on the server running the Agent. See [Exchange-online-powershell-v2](https://learn.microsoft.com/en-us/powershell/exchange/exchange-online-powershell-v2?view=exchange-ps) for instructions
 
 - [ ] User defined variables: `ExchangeOnlineAdminUsername` and `$ExchangeOnlineAdminPassword` created in your HelloID portal.
-  see also https://docs.helloid.com/en/variables/custom-variables.html
+  See also [Custom Variables](https://docs.helloid.com/en/variables/custom-variables.html)
 
 ## Description
 
@@ -18,10 +17,10 @@ This code snippet executes the following tasks:
 
 ```json
 {
-    "Name": "MySharedMailbox",
+    "MailboxIdentity": "MySharedMailbox",
     "UsersToAdd": [
         {
-            "Id": "84805b08-bc39-4fec-a79d-a4a6498dc7bz",
+            "UserIdentity": "84805b08-bc39-4fec-a79d-a4a6498dc7bz",
             "DisplayName": "JohnDoe"
         }
     ]
@@ -29,6 +28,7 @@ This code snippet executes the following tasks:
 ```
 
 > :exclamation: It is important to note that the names of your form fields might differ. Ensure that the `$formObject` hashtable is appropriately adjusted to match your form fields.
+> [See the Microsoft Docs page](https://learn.microsoft.com/en-us/powershell/module/exchange/add-mailboxpermission?view=exchange-ps)
 
 2. Constructs a powershell credential object from the supplied administrative username and password
 

@@ -2,8 +2,8 @@
 ##############################################################
 # Form mapping
 $formObject = @{
-    MailboxDistinguishedName = $form.Name
-    UsersToAdd               = $form.UsersToAdd
+    MailboxIdentity = $form.MailboxIdentity
+    UsersToAdd      = $form.UsersToAdd
 }
 
 [bool] $IsConnected = $false
@@ -16,23 +16,23 @@ try {
     $null = Connect-ExchangeOnline -Credential $credential -ShowBanner:$false -ShowProgress:$false -ErrorAction Stop
     $IsConnected = $true
 
-    foreach ($user in $formObject.UsersToAdd){
+    foreach ($user in $formObject.UsersToAdd) {
         try {
-            Write-Information "Executing ExchangeOnline action: [MailboxGrantFullAccess] for: [$($user.id)] on mailbox: [$($formObject.MailboxDistinguishedName)]"
+            Write-Information "Executing ExchangeOnline action: [MailboxGrantFullAccess] for: [$($user.UserIdentity)] on mailbox: [$($formObject.MailboxIdentity)]"
             $splatParams = @{
-                Identity        = $formObject.MailboxDistinguishedName
+                Identity        = $formObject.MailboxIdentity
                 AccessRights    = 'FullAccess'
                 InheritanceType = 'All'
-                User            = $user.Id
+                User            = $user.UserIdentity
                 AutoMapping     = $true
             }
             $null = Add-MailboxPermission @splatParams -ErrorAction Stop
             $auditLog = @{
                 Action            = 'UpdateResource'
                 System            = 'ExchangeOnline'
-                TargetIdentifier  = $($user.Id)
+                TargetIdentifier  = $($user.UserIdentity)
                 TargetDisplayName = $($user.DisplayName)
-                Message           = "ExchangeOnline action: [MailboxGrantFullAccess] for: [$($user.id)] on mailbox: [$($formObject.MailboxDistinguishedName)] executed successfully"
+                Message           = "ExchangeOnline action: [MailboxGrantFullAccess] for: [$($user.UserIdentity)] on mailbox: [$($formObject.MailboxIdentity)] executed successfully"
                 IsError           = $false
             }
             Write-Information -Tags 'Audit' -MessageData $auditLog
@@ -46,15 +46,15 @@ try {
     $auditLog = @{
         Action            = 'UpdateResource'
         System            = 'ExchangeOnline'
-        TargetIdentifier  = $($user.Id)
+        TargetIdentifier  = $($user.UserIdentity)
         TargetDisplayName = $($user.DisplayName)
-        Message           = "Could not execute ExchangeOnline action: [MailboxGrantFullAccess] for: [$($formObject.DisplayName)] on mailbox: [$($formObject.MailboxDistinguishedName)], error: $($ex.Exception.Message), Details : $($_.Exception.ErrorDetails)"
+        Message           = "Could not execute ExchangeOnline action: [MailboxGrantFullAccess] for: [$($user.DisplayName)] on mailbox: [$($formObject.MailboxIdentity)], error: $($ex.Exception.Message), Details : $($_.Exception.ErrorDetails)"
         IsError           = $true
     }
-    Write-Information -Tags "Audit" -MessageData $auditLog
+    Write-Information -Tags 'Audit' -MessageData $auditLog
     Write-Error $auditLog.Message
 } finally {
-    if ($IsConnected){
+    if ($IsConnected) {
         $exchangeSessionEnd = Disconnect-ExchangeOnline -Confirm:$false -Verbose:$false
     }
 }
