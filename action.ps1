@@ -18,21 +18,21 @@ try {
 
     foreach ($user in $formObject.UsersToAdd) {
         try {
-            Write-Information "Executing ExchangeOnline action: [MailboxGrantFullAccess] for: [$($user.UserIdentity)] on mailbox: [$($formObject.MailboxIdentity)]"
+            Write-Information "Executing ExchangeOnline action: [MailboxGrantFullAccess] for: [$($user.UserId)] on mailbox: [$($formObject.MailboxIdentity)]"
             $splatParams = @{
                 Identity        = $formObject.MailboxIdentity
                 AccessRights    = 'FullAccess'
                 InheritanceType = 'All'
-                User            = $user.UserIdentity
+                User            = $user.UserId
                 AutoMapping     = $true
             }
             $null = Add-MailboxPermission @splatParams -ErrorAction Stop
             $auditLog = @{
                 Action            = 'UpdateResource'
                 System            = 'ExchangeOnline'
-                TargetIdentifier  = $($user.UserIdentity)
+                TargetIdentifier  = $($user.UserId)
                 TargetDisplayName = $($user.DisplayName)
-                Message           = "ExchangeOnline action: [MailboxGrantFullAccess] for: [$($user.UserIdentity)] on mailbox: [$($formObject.MailboxIdentity)] executed successfully"
+                Message           = "ExchangeOnline action: [MailboxGrantFullAccess] for: [$($user.UserId)] on mailbox: [$($formObject.MailboxIdentity)] executed successfully"
                 IsError           = $false
             }
             Write-Information -Tags 'Audit' -MessageData $auditLog
@@ -46,7 +46,7 @@ try {
     $auditLog = @{
         Action            = 'UpdateResource'
         System            = 'ExchangeOnline'
-        TargetIdentifier  = $($user.UserIdentity)
+        TargetIdentifier  = $($user.UserId)
         TargetDisplayName = $($user.DisplayName)
         Message           = "Could not execute ExchangeOnline action: [MailboxGrantFullAccess] for: [$($user.DisplayName)] on mailbox: [$($formObject.MailboxIdentity)], error: $($ex.Exception.Message), Details : $($_.Exception.ErrorDetails)"
         IsError           = $true

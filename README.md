@@ -20,7 +20,7 @@ This code snippet executes the following tasks:
     "MailboxIdentity": "MySharedMailbox",
     "UsersToAdd": [
         {
-            "UserIdentity": "84805b08-bc39-4fec-a79d-a4a6498dc7bz",
+            "UserId": "84805b08-bc39-4fec-a79d-a4a6498dc7bz",
             "DisplayName": "JohnDoe"
         }
     ]
